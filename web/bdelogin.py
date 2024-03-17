@@ -14,9 +14,9 @@ class BdeLogin(Resource):
     def get(self):
         # Get request data
         data = request.json
-        email = data.get("email")
+        username = data.get("username")
         password = data.get("password")
-        print(email, password)
+        print(username, password)
         # Check if the database exists, if not, create it
         if self.db_name not in self.client.list_database_names():
             self.client[self.db_name]
@@ -24,12 +24,11 @@ class BdeLogin(Resource):
         # Check if the collection exists, if not, create it
         if self.collection_name not in self.db.list_collection_names():
             self.db.create_collection(self.collection_name)
-            print("Hey brother")
 
         
 
         # Check if the email exists in the collection
-        user = self.collection.find_one({"email": email})
+        user = self.collection.find_one({"email": username})
 
         if user:
             # Email exists, check password

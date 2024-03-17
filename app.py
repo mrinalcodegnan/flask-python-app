@@ -11,6 +11,7 @@ from web.studentsignup import StudentSignup
 from web.studentlogin import StudentLogin
 from web.jobpostings import JobPosting  # Import JobPosting from jobpostings module
 import json
+import urllib.parse
 from pymongo import MongoClient  # Import MongoClient from pymongo
 
 with open('local_config.json', 'r') as config_file:
@@ -21,7 +22,16 @@ MONGO_CONFIG = config_data['MONGO_CONFIG']
 class MyFlask(Flask):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.client = MongoClient(MONGO_CONFIG['uri'])
+
+        uri = MONGO_CONFIG['url']
+        parsed_uri = urllib.parse.urlparse(uri)
+        escaped_username = urllib.parse.quote_plus(parsed_uri.username)
+        escaped_password = urllib.parse.quote_plus(parsed_uri.password)
+
+        # Reconstruct URI with escaped username and password
+        escaped_uri = uri.replace(parsed_uri.username, escaped_username).replace(parsed_uri.password, escaped_password)
+
+        self.client = MongoClient(escaped_uri)
         self.db = self.client[MONGO_CONFIG['db_name']]
         self.collection = self.db[MONGO_CONFIG['collection_name']]
 

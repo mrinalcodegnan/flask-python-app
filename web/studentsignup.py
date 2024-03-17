@@ -15,11 +15,17 @@ class StudentSignup(Resource):
         # Extract data from the request
         data = request.get_json()
         id = str(uuid.uuid4())
+
         timestamp = datetime.now().isoformat()
         name = data.get('name')
-        email = data.get('email')
+        age = data.get('age')
         password = data.get('password')
-        phone = data.get('phone')
+        phone = data.get('mobileNumber')
+        email = data.get('email')
+        state = data.get('state')
+
+
+        
 
         # Check if all required fields are present
         if not (name and email and password):
@@ -36,7 +42,10 @@ class StudentSignup(Resource):
             "name": name,
             "email": email,
             "password": password,
-            "phone": phone
+            "phone": phone,
+            "age": age,
+            "state":state
+
         }
         result = self.collection.insert_one(student_data)
         student_data['_id'] = str(result.inserted_id)
