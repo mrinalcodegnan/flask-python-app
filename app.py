@@ -5,7 +5,7 @@ from web.bdelogin import BdeLogin
 from web.bdesignup import BdeSignup
 from web.companylogin import CompanyLogin
 from web.companysignup import CompanySignup
-from web.applyforjobs import ApplyForJob
+from web.applyforjobs import ApplyJob
 from web.list_openings import ListOpenings
 from web.studentsignup import StudentSignup
 from web.studentlogin import StudentLogin
@@ -105,7 +105,7 @@ class MyFlask(Flask):
             }
         ),
         api.add_resource(
-            ApplyForJob,
+            ApplyJob,
             "/api/v1/applyforjob",
             resource_class_kwargs = {
                 'client' : self.client,
