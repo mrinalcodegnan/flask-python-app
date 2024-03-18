@@ -6,11 +6,21 @@ class ListOpenings(Resource):
     def __init__(self, client, db, collection):
         super().__init__()
         self.client = client
-        self.db = db
-        self.collection = collection
+        self.db_name = db
+        self.collection_name = collection
+        self.db = self.client[self.db_name]
+        self.collection = self.db[self.collection_name]
 
     def get(self):
         # Retrieve all jobs from the collection
+
+        if self.db_name not in self.client.list_database_names():
+            self.client[self.db_name]
+
+        # Check if the collection exists, if not, create it
+        if self.collection_name not in self.db.list_collection_names():
+            self.db.create_collection(self.collection_name)
+            
         job_documents = self.collection.find()
 
         # Prepare the list of job dictionaries

@@ -47,7 +47,7 @@ class MyFlask(Flask):
             "/api/v1/signup",
             resource_class_kwargs={
                 'client' : self.client,
-                'db' : self.db,
+                'db' : "codegnan_prod",
                 'collection' : self.student_login_collection
                 }
         ),
@@ -56,7 +56,7 @@ class MyFlask(Flask):
             "/api/v1/studentlogin",
             resource_class_kwargs={
                 'client' : self.client,
-                'db' : self.db,
+                'db' : "codegnan_prod",
                 'collection' : self.student_login_collection
                 }
         ),
@@ -65,13 +65,13 @@ class MyFlask(Flask):
             "/api/v1/bdesignup",
             resource_class_kwargs = {
                 'client' : self.client,
-                'db_name' : "codegnan_prod",
+                'db' : "codegnan_prod",
                 'collection' : self.bde_login_collection
             }
         ),
         api.add_resource(
             BdeLogin,
-            "/api/v1/bdeglogin",
+            "/api/v1/bdelogin",
             resource_class_kwargs = {
                 'client' : self.client,
                 'db_name' : "codegnan_prod",
@@ -83,7 +83,7 @@ class MyFlask(Flask):
             "/api/v1/companylogin",
             resource_class_kwargs = {
                 'client' : self.client,
-                'db_name' : "codegnan_prod",
+                'db' : "codegnan_prod",
                 'collection' : self.company_login_collection
             }
         ),
@@ -92,25 +92,25 @@ class MyFlask(Flask):
             "/api/v1/companysignup",
             resource_class_kwargs = {
                 'client' : self.client,
-                'db_name' : "codegnan_prod",
+                'db' : "codegnan_prod",
                 'collection' : self.company_login_collection
             }
         ),
         api.add_resource(
             JobPosting,
-            "/api/v1/job_postings",
+            "/api/v1/postjobs",
             resource_class_kwargs={
                 'client' : self.client,
-                'db' : self.db,
+                'db' : "codegnan_prod",
                 'collection': self.job_details_collection
             }
         ),
         api.add_resource(
             ListOpenings,
-            "/api/v1/list_openings",
+            "/api/v1/listopenings",
             resource_class_kwargs={
                 'client' : self.client,
-                'db' : self.db,
+                'db' : "codegnan_prod",
                 'collection': self.job_details_collection
             }
         ),
@@ -119,8 +119,9 @@ class MyFlask(Flask):
             "/api/v1/applyforjob",
             resource_class_kwargs = {
                 'client' : self.client,
-                'db' : self.db,
-                'collection': self.job_details_collection
+                'db' : "codegnan_prod",
+                'job_collection': self.job_details_collection,
+                'student_collection': self.student_login_collection
             }
         )
 

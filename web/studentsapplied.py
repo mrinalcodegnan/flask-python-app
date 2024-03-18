@@ -11,14 +11,14 @@ class StudentsApplied(Resource):
         self.student_collection = student_collection
 
     def get(self, job_id):
-        # Search for the job document with the provided job_id
+        
         job_document = self.job_collection.find_one({"id": job_id})
 
         if job_document:
-            # Retrieve the applicants_ids array from the job document
+            
             applicants_ids = job_document.get('applicants_ids', [])
 
-            # Fetch the student details for the applicants
+            
             student_details = []
             for student_id in applicants_ids:
                 student_document = self.student_collection.find_one({"id": student_id})

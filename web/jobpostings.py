@@ -11,8 +11,10 @@ class JobPosting(Resource):
     def __init__(self,client, db, collection):
         super().__init__()
         self.client = client
-        self.db = db
-        self.collection = collection
+        self.db_name = db
+        self.collection_name = collection
+        self.db = self.client[self.db_name]
+        self.collection = self.db[self.collection_name]
 
 
     def post(self):
@@ -32,11 +34,20 @@ class JobPosting(Resource):
         positions_open = data.get('positions_open')
 
         # Check if all required fields are present
-        if not (id and company_name and profile and branches and skills_required and ctc and percentage and bond_years and
-                work_location and year_of_passing and positions_open):
-            return {"error": "Missing required fields"}, 400
+        #if not (id and company_name and profile and branches and skills_required and ctc and percentage and bond_years and
+        #        work_location and year_of_passing and positions_open):
+        #       return {"error": "Missing required fields"}, 400
 
         # Insert job posting data into MongoDB
+
+        # Check if the database exists, if not, create it
+        if self.db_name not in self.client.list_database_names():
+            self.client[self.db_name]
+
+        # Check if the collection exists, if not, create it
+        if self.collection_name not in self.db.list_collection_names():
+            self.db.create_collection(self.collection_name)
+
         job_data = {
             "id":id,
             "timestamp":timestamp,

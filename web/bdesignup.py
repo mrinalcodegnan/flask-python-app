@@ -8,8 +8,10 @@ class BdeSignup(Resource):
     def __init__(self, client, db, collection):
         super().__init__()
         self.client = client
-        self.db = db
-        self.collection = collection
+        self.db_name = db
+        self.collection_name = collection
+        self.db = self.client[self.db_name]
+        self.collection = self.db[self.collection_name]
 
     def post(self):
         # Extract data from the request
@@ -18,9 +20,15 @@ class BdeSignup(Resource):
         
         timestamp = datetime.now().isoformat()
         name = data.get('username')
-        email = data.get('cpassword')
+        email = data.get('email')
         password = data.get('password')
         
+        if self.db_name not in self.client.list_database_names():
+            self.client[self.db_name]
+
+        # Check if the collection exists, if not, create it
+        if self.collection_name not in self.db.list_collection_names():
+            self.db.create_collection(self.collection_name)
 
         # Check if all required fields are present
         if not (name and email and password):

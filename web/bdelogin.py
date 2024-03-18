@@ -11,7 +11,7 @@ class BdeLogin(Resource):
         self.db = self.client[self.db_name]
         self.collection = self.db[self.collection_name]
 
-    def get(self):
+    def post(self):
         # Get request data
         data = request.json
         username = data.get("username")
@@ -33,7 +33,7 @@ class BdeLogin(Resource):
         if user:
             # Email exists, check password
             if user["password"] == password:
-                return {"message": "Login successful"}, 200
+                return {"message": "Login successful","userType":"bde"}, 200
             else:
                 return {"message": "Password incorrect"}, 400
         else:

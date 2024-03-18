@@ -6,12 +6,17 @@ class ApplyJob(Resource):
     def __init__(self, client, db, job_collection, student_collection):
         super().__init__()
         self.client = client
-        self.db = db
-        self.job_collection = job_collection
+        self.db_name = db
+        self.job_collection= job_collection
         self.student_collection = student_collection
+        self.db = self.client[self.db_name]
+        self.job_collection = self.db[self.job_collection]
+        self.student_collection = self.db[student_collection]
+        print("student col", self.student_collection)
+        print("job_col", self.job_collection)
 
     def post(self):
-        # Extract data from the request
+        
         data = request.get_json()
         student_id = data.get('student_id')
         job_id = data.get('job_id')

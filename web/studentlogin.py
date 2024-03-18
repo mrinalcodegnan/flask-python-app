@@ -3,15 +3,15 @@ from pymongo import MongoClient
 from flask_restful import Resource
 
 class StudentLogin(Resource):
-    def __init__(self, client, db_name, collection) -> None:
+    def __init__(self, client, db, collection) -> None:
         super().__init__()
         self.client = client
-        self.db_name = db_name
+        self.db_name = db
         self.collection_name = collection
         self.db = self.client[self.db_name]
         self.collection = self.db[self.collection_name]
 
-    def get(self):
+    def post(self):
         # Get request data
         data = request.json
         email = data.get("username")
@@ -31,7 +31,7 @@ class StudentLogin(Resource):
         if user:
             # Email exists, check password
             if user["password"] == password:
-                return {"message": "Login successful"}, 200
+                return {"message": "Login successful", "userType":"student"}, 200
             else:
                 return {"message": "Password incorrect"}, 400
         else:
