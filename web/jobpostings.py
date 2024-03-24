@@ -22,17 +22,17 @@ class JobPosting(Resource):
         data = request.get_json()
         id = str(uuid.uuid4())
         timestamp = datetime.now().isoformat()
-        company_name = data.get('company_name')
-        profile = data.get('profile')
-        branches = data.get('branches')
-        skills_required = data.get('skills_required')
-        ctc = data.get('ctc')
+        companyName = data.get('companyName')
+        jobRole = data.get('jobRole')
+        graduates = data.get('graduates')
+        salary = data.get('salary')
+        educationQualification = data.get('educationQualification')
+        department = data.get('department')
         percentage = data.get('percentage')
-        bond_years = data.get('bond_years')
-        work_location = data.get('work_location')
-        year_of_passing = data.get('year_of_passing')
-        positions_open = data.get('positions_open')
-
+        technologies = data.get('technologies')
+        bond = data.get('bond')
+        jobLocation = data.get('jobLocation')
+        specialNote=data.get("specialNote")
         # Check if all required fields are present
         #if not (id and company_name and profile and branches and skills_required and ctc and percentage and bond_years and
         #        work_location and year_of_passing and positions_open):
@@ -51,16 +51,17 @@ class JobPosting(Resource):
         job_data = {
             "id":id,
             "timestamp":timestamp,
-            "company_name": company_name,
-            "profile": profile,
-            "branches": branches,
-            "skills_required": skills_required,
-            "ctc": ctc,
-            "percentage": percentage,
-            "bond_years": bond_years,
-            "work_location": work_location,
-            "year_of_passing": year_of_passing,
-            "positions_open": positions_open
+            "companyName" : companyName,
+            "jobRole" : jobRole,
+            "graduates" : graduates,
+            "salary" : salary,
+            "educationQualification" : educationQualification,
+            "department" : department,
+            "percentage" : percentage,
+            "technologies" : technologies,
+            "bond" : bond,
+            "jobLocation" : jobLocation,
+            "specialNote":specialNote,
         }
         result = self.collection.insert_one(job_data)
         job_data['_id'] = str(result.inserted_id)

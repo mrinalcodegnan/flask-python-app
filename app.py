@@ -5,7 +5,9 @@ from web.bdelogin import BdeLogin
 from web.bdesignup import BdeSignup
 from web.companylogin import CompanyLogin
 from web.companysignup import CompanySignup
+from web.jobsapplied import GetAppliedJobsList
 from web.applyforjobs import ApplyJob
+from web.studentsapplied import GetAppliedStudentList
 from web.list_openings import ListOpenings
 from web.studentsignup import StudentSignup
 from web.studentlogin import StudentLogin
@@ -117,6 +119,26 @@ class MyFlask(Flask):
         api.add_resource(
             ApplyJob,
             "/api/v1/applyforjob",
+            resource_class_kwargs = {
+                'client' : self.client,
+                'db' : "codegnan_prod",
+                'job_collection': self.job_details_collection,
+                'student_collection': self.student_login_collection
+            }
+        ),
+        api.add_resource(
+            GetAppliedStudentList,
+            "/api/v1/getappliedstudentslist",
+            resource_class_kwargs = {
+                'client' : self.client,
+                'db' : "codegnan_prod",
+                'job_collection': self.job_details_collection,
+                'student_collection': self.student_login_collection
+            }
+        ),
+        api.add_resource(
+            GetAppliedJobsList,
+            "/api/v1/getappliedjobslist",
             resource_class_kwargs = {
                 'client' : self.client,
                 'db' : "codegnan_prod",

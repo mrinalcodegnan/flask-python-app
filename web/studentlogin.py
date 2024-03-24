@@ -31,7 +31,7 @@ class StudentLogin(Resource):
         if user:
             # Email exists, check password
             if user["password"] == password:
-                return {"message": "Login successful", "userType":"student"}, 200
+                return {"message": "Login successful", "userType":"student","student_id":user["id"]}, 200
             else:
                 return {"message": "Password incorrect"}, 400
         else:

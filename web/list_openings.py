@@ -28,16 +28,17 @@ class ListOpenings(Resource):
         for job_document in job_documents:
             job_dict = {
                 "job_id": job_document.get('id'),
-                "company_name": job_document.get('company_name'),
-                "profile": job_document.get('profile'),
-                "branches": job_document.get('branches'),
-                "skills_required": job_document.get('skills_required'),
-                "ctc": job_document.get('ctc'),
+                "companyName": job_document.get('companyName'),
+                "jobRole": job_document.get('jobRole'),
+                "graduates": job_document.get('graduates'),
+                "salary": job_document.get('salary'),
+                "educationQualification": job_document.get('educationQualification'),
+                "department": job_document.get('department'),
                 "percentage": job_document.get('percentage'),
-                "bond_years": job_document.get('bond_years'),
-                "work_location": job_document.get('work_location'),
-                "year_of_passing": job_document.get('year_of_passing'),
-                "positions_open": job_document.get('positions_open')
+                "technologies": job_document.get('technologies'),
+                "bond": job_document.get('bond'),
+                "jobLocation": job_document.get('jobLocation'),
+                "specialNote": job_document.get('specialNote')
             }
             job_list.append(job_dict)
 

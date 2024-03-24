@@ -25,7 +25,11 @@ class StudentSignup(Resource):
         phone = data.get('mobileNumber')
         email = data.get('email')
         state = data.get('state')
-
+        qualification=data.get("qualification")
+        city=data.get("cityname")
+        department=data.get("department")
+        yearOfPassing=data.get("yearOfPassing")
+        collegeName=data.get("collegeName")
         # Check if the database exists, if not, create it
         if self.db_name not in self.client.list_database_names():
             self.client[self.db_name]
@@ -34,7 +38,7 @@ class StudentSignup(Resource):
         if self.collection_name not in self.db.list_collection_names():
             self.db.create_collection(self.collection_name)
         
-
+        print(data)
         # Check if all required fields are present
         if not (name and email and password):
             return {"error": "Missing required fields"}, 400
@@ -52,8 +56,12 @@ class StudentSignup(Resource):
             "password": password,
             "phone": phone,
             "age": age,
-            "state":state
-
+            "state":state,
+            "qualification":qualification,
+            "yearOfPassing":yearOfPassing,
+            "city":city,
+            "department":department,
+            "collegeName":collegeName
         }
         result = self.collection.insert_one(student_data)
         student_data['_id'] = str(result.inserted_id)
