@@ -40,7 +40,14 @@ class GetAppliedStudentList(Resource):
                             "student_id": student_document.get('id'),
                             "name": student_document.get('name'),
                             "email": student_document.get('email'),
-                            "phone": student_document.get('phone')
+                            "phone": student_document.get('phone'),
+                            "age": student_document.get('age'),
+                            "state": student_document.get('state'),
+                            "qualification": student_document.get('qualification'),
+                            "yearOfPassing": student_document.get('yearOfPassing'),
+                            "city" : student_document.get('city'),
+                            "department" : student_document.get('department'),
+                            "collegeName": student_document.get('collegeName')
                         })
                 return {"students_applied": student_details}, 200
             else:
