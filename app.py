@@ -148,7 +148,6 @@ class MyFlask(Flask):
         )
 
 
-if __name__ == "__main__":
-    app = MyFlask(__name__)
-    app.add_api()
-    app.run(debug=True)
+app = MyFlask(__name__)
+app.add_api()
+app.run(debug=True)
