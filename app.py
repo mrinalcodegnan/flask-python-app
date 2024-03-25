@@ -1,5 +1,7 @@
 # app.py
 from flask import Flask
+
+from flask_cors import CORS
 from flask_restful import Api
 from web.bdelogin import BdeLogin
 from web.bdesignup import BdeSignup
@@ -150,4 +152,5 @@ class MyFlask(Flask):
 
 app = MyFlask(__name__)
 app.add_api()
+CORS(app) 
 app.run(debug=True)
