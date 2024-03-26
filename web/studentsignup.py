@@ -1,4 +1,3 @@
-from flask import request, render_template_string
 from flask_restful import Resource
 from pymongo import MongoClient
 import uuid
@@ -51,7 +50,7 @@ class StudentSignup(Resource):
         rendered_html = render_template_string(html_content, name=name)
 
         # Email configuration
-        sender_email = "mrinalnilotpal@outlook.com"
+        sender_email = "mrinalcodegnan@outlook.com"
         recipient_email = email
         subject = "Welcome to Codegnan Placements!"
 
@@ -67,7 +66,7 @@ class StudentSignup(Resource):
         # Send email using SMTP
         smtp_server = smtplib.SMTP('smtp.office365.com', 587)  # Update SMTP server details
         smtp_server.starttls()
-        smtp_server.login(sender_email, 'Mrinal@iitm181')  # Update sender's email and password
+        smtp_server.login(sender_email, 'Mrinal@iitm18')  # Update sender's email and password
         smtp_server.sendmail(sender_email, recipient_email, msg.as_string())
         smtp_server.quit()
 
@@ -88,7 +87,7 @@ class StudentSignup(Resource):
         department = data.get("department")
         yearOfPassing = data.get("yearOfPassing")
         collegeName = data.get("collegeName")
-        resume_file = request.files.get('resume')  
+        resume_file = request.files.get('resume')
 
         # Check if the database exists, if not, create it
         if self.db_name not in self.client.list_database_names():
@@ -136,3 +135,4 @@ class StudentSignup(Resource):
 
         # Return a success message along with student data
         return {"message": "Student signup successful", "student": student_data}, 201
+~                                                                                                             
