@@ -1,11 +1,12 @@
-
-from flask import request
+from flask import request, render_template_string
 from flask_restful import Resource
 from pymongo import MongoClient
 import uuid
 from datetime import datetime
 from gridfs import GridFS
-
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 class StudentSignup(Resource):
     def __init__(self, client, db, collection):
@@ -16,6 +17,59 @@ class StudentSignup(Resource):
         self.db = self.client[self.db_name]
         self.collection = self.db[self.collection_name]
         self.fs = GridFS(self.db)  # Initialize GridFS for storing files
+
+    def send_email(self, name, email):
+        # Email content in HTML format
+        html_content = """
+        <html>
+            <head>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #FFA500;
+                        color: #000000;
+                    }
+                    .container {
+                        padding: 20px;
+                        background-color: #000000;
+                        color: #FFA500;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h2>Welcome to Codegnan Placements!</h2>
+                    <p>Hello, {{ name }},</p>
+                    <p>Thank you for signing up with Codegnan Placements. We are excited to have you on board!</p>
+                    <p>Best Regards,<br/>Codegnan Placements Team</p>
+                </div>
+            </body>
+        </html>
+        """
+
+        # Render email template with student's name
+        rendered_html = render_template_string(html_content, name=name)
+
+        # Email configuration
+        sender_email = "mrinalnilotpal@outlook.com"
+        recipient_email = email
+        subject = "Welcome to Codegnan Placements!"
+
+        # Create message container
+        msg = MIMEMultipart('alternative')
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+        msg['Subject'] = subject
+
+        # Attach HTML content to the email
+        msg.attach(MIMEText(rendered_html, 'html'))
+
+        # Send email using SMTP
+        smtp_server = smtplib.SMTP('smtp.office365.com', 587)  # Update SMTP server details
+        smtp_server.starttls()
+        smtp_server.login(sender_email, 'Mrinal@iitm181')  # Update sender's email and password
+        smtp_server.sendmail(sender_email, recipient_email, msg.as_string())
+        smtp_server.quit()
 
     def post(self):
         # Extract data from the request
@@ -76,6 +130,9 @@ class StudentSignup(Resource):
 
         # Add the resume file ID to student data
         student_data['resume_id'] = str(resume_id)
+
+        # Send welcome email to the student
+        self.send_email(name, email)
 
         # Return a success message along with student data
         return {"message": "Student signup successful", "student": student_data}, 201
