@@ -1,3 +1,4 @@
+from flask import request, render_template_string
 from flask_restful import Resource
 from pymongo import MongoClient
 import uuid
@@ -20,29 +21,60 @@ class StudentSignup(Resource):
     def send_email(self, name, email):
         # Email content in HTML format
         html_content = """
-        <html>
-            <head>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        background-color: #FFA500;
-                        color: #000000;
-                    }
-                    .container {
-                        padding: 20px;
-                        background-color: #000000;
-                        color: #FFA500;
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <h2>Welcome to Codegnan Placements!</h2>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Welcome to Codegnan Placements!</title>
+            <style>
+                /* Global styles */
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f5f5f5;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    background-color: #ffffff;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    border-radius: 10px;
+                }
+                .content {
+                    text-align: center;
+                }
+                h1, p {
+                    margin-bottom: 20px;
+                }
+                .button {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    background-color: #FFA500;
+                    color: #ffffff;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    transition: background-color 0.3s ease;
+                }
+                .button:hover {
+                    background-color: #FFD700;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="content">
+                    <h1>Welcome to Codegnan Placements!</h1>
                     <p>Hello, {{ name }},</p>
-                    <p>Thank you for signing up with Codegnan Placements. We are excited to have you on board!</p>
-                    <p>Best Regards,<br/>Codegnan Placements Team</p>
+                    <p>Congratulations on taking the first step towards a successful career!</p>
+                    <p>At Codegnan Placements, we are committed to helping you achieve your goals and aspirations. Our team of experts is here to support you every step of the way.</p>
+                    <p>Explore our website to discover a world of opportunities and resources tailored just for you.</p>
+                    <a href="https://www.codegnan.com" class="button">Explore Now</a>
                 </div>
-            </body>
+            </div>
+        </body>
         </html>
         """
 
@@ -130,9 +162,9 @@ class StudentSignup(Resource):
         # Add the resume file ID to student data
         student_data['resume_id'] = str(resume_id)
 
-        # Send welcome email to the student
+               # Send welcome email to the student
         self.send_email(name, email)
 
         # Return a success message along with student data
         return {"message": "Student signup successful", "student": student_data}, 201
-~                                                                                                             
+
