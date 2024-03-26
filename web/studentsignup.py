@@ -1,8 +1,11 @@
+
 from flask import request
 from flask_restful import Resource
 from pymongo import MongoClient
 import uuid
 from datetime import datetime
+from gridfs import GridFS
+
 
 class StudentSignup(Resource):
     def __init__(self, client, db, collection):
@@ -12,6 +15,7 @@ class StudentSignup(Resource):
         self.collection_name = collection
         self.db = self.client[self.db_name]
         self.collection = self.db[self.collection_name]
+        self.fs = GridFS(self.db)  # Initialize GridFS for storing files
 
     def post(self):
         # Extract data from the request
@@ -25,11 +29,13 @@ class StudentSignup(Resource):
         phone = data.get('mobileNumber')
         email = data.get('email')
         state = data.get('state')
-        qualification=data.get("qualification")
-        city=data.get("cityname")
-        department=data.get("department")
-        yearOfPassing=data.get("yearOfPassing")
-        collegeName=data.get("collegeName")
+        qualification = data.get("qualification")
+        city = data.get("cityname")
+        department = data.get("department")
+        yearOfPassing = data.get("yearOfPassing")
+        collegeName = data.get("collegeName")
+        resume_file = request.files.get('resume')  # Extract resume file from request
+
         # Check if the database exists, if not, create it
         if self.db_name not in self.client.list_database_names():
             self.client[self.db_name]
@@ -37,10 +43,9 @@ class StudentSignup(Resource):
         # Check if the collection exists, if not, create it
         if self.collection_name not in self.db.list_collection_names():
             self.db.create_collection(self.collection_name)
-        
-        print(data)
+
         # Check if all required fields are present
-        if not (name and email and password):
+        if not (name and email and password and resume_file):
             return {"error": "Missing required fields"}, 400
 
         # Check if the email already exists in the collection
@@ -56,15 +61,21 @@ class StudentSignup(Resource):
             "password": password,
             "phone": phone,
             "age": age,
-            "state":state,
-            "qualification":qualification,
-            "yearOfPassing":yearOfPassing,
-            "city":city,
-            "department":department,
-            "collegeName":collegeName
+            "state": state,
+            "qualification": qualification,
+            "yearOfPassing": yearOfPassing,
+            "city": city,
+            "department": department,
+            "collegeName": collegeName
         }
         result = self.collection.insert_one(student_data)
         student_data['_id'] = str(result.inserted_id)
+
+        # Save the resume file to GridFS with student ID as filename
+        resume_id = self.fs.put(resume_file, filename=id)
+
+        # Add the resume file ID to student data
+        student_data['resume_id'] = str(resume_id)
 
         # Return a success message along with student data
         return {"message": "Student signup successful", "student": student_data}, 201
