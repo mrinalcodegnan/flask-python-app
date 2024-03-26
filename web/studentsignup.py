@@ -19,7 +19,7 @@ class StudentSignup(Resource):
 
     def post(self):
         # Extract data from the request
-        data = request.get_json()
+        data = request.form
         id = str(uuid.uuid4())
 
         timestamp = datetime.now().isoformat()
@@ -34,7 +34,7 @@ class StudentSignup(Resource):
         department = data.get("department")
         yearOfPassing = data.get("yearOfPassing")
         collegeName = data.get("collegeName")
-        resume_file = request.files.get('resume')  # Extract resume file from request
+        resume_file = request.file['resume']  # Extract resume file from request
 
         # Check if the database exists, if not, create it
         if self.db_name not in self.client.list_database_names():
