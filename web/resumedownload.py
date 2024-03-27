@@ -12,7 +12,7 @@ class DownloadResume(Resource):
         self.db = self.client[self.db_name]  # Initialize MongoDB database
         self.fs = GridFS(self.db)  # Initialize GridFS for file storage
 
-    def post(self):
+    def get(self):
         # Get the resume_id from the request JSON data
         resume_id = request.json.get('student_id')
 
