@@ -4,6 +4,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
 from web.bdelogin import BdeLogin
+from web.resumedownload import DownloadResume
 from web.bdesignup import BdeSignup
 from web.companylogin import CompanyLogin
 from web.companysignup import CompanySignup
@@ -148,8 +149,17 @@ class MyFlask(Flask):
                 'student_collection': self.student_login_collection
             }
         )
+        api.add_resource(
+            DownloadResume,
+            "/api/v1/downloadresume",
+            resource_class_kwargs = {
+                'client' : self.client,
+                'db_name': "codegnan_prod"
+            }
+        )
 
 
 app = MyFlask(__name__)
 app.add_api()
 CORS(app)
+app.run()
