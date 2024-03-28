@@ -1,5 +1,6 @@
 import pymongo
 from flask_restful import Resource, reqparse
+import datetime
 
 
 class ListOpenings(Resource):
@@ -25,7 +26,17 @@ class ListOpenings(Resource):
 
         # Prepare the list of job dictionaries
         job_list = []
+
+        current_timestamp = datetime.datetime.now()
         for job_document in job_documents:
+
+            deadline = datetime.datetime.strptime(job_document.get("deadLine"), "%Y-%m-%d %H:%M")
+    
+            # Compare current timestamp with deadline
+            if current_timestamp > deadline:
+                isActive = False
+            else:
+                isActive = True
             job_dict = {
                 "job_id": job_document.get('id'),
                 "companyName": job_document.get('companyName'),
@@ -38,7 +49,9 @@ class ListOpenings(Resource):
                 "technologies": job_document.get('technologies'),
                 "bond": job_document.get('bond'),
                 "jobLocation": job_document.get('jobLocation'),
-                "specialNote": job_document.get('specialNote')
+                "specialNote": job_document.get('specialNote'),
+                "deadLine": job_document.get("deadLine"),
+                "isActive": isActive
             }
             job_list.append(job_dict)
 
