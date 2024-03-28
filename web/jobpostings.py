@@ -33,6 +33,7 @@ class JobPosting(Resource):
         bond = data.get('bond')
         jobLocation = data.get('jobLocation')
         specialNote=data.get("specialNote")
+        deadLine = data.get("deadLine")
         # Check if all required fields are present
         #if not (id and company_name and profile and branches and skills_required and ctc and percentage and bond_years and
         #        work_location and year_of_passing and positions_open):
@@ -62,6 +63,7 @@ class JobPosting(Resource):
             "bond" : bond,
             "jobLocation" : jobLocation,
             "specialNote":specialNote,
+            "deadLine":deadLine
         }
         result = self.collection.insert_one(job_data)
         job_data['_id'] = str(result.inserted_id)
