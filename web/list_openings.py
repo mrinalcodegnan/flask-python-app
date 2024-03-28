@@ -1,6 +1,7 @@
 import pymongo
 from flask_restful import Resource, reqparse
 import datetime
+import pytz
 
 
 class ListOpenings(Resource):
@@ -26,12 +27,21 @@ class ListOpenings(Resource):
 
         # Prepare the list of job dictionaries
         job_list = []
+        
 
-        current_timestamp = datetime.datetime.now()
+        ist = pytz.timezone('Asia/Kolkata')
+        current_timestamp = datetime.datetime.now(ist)
         for job_document in job_documents:
 
             deadline = datetime.datetime.strptime(job_document.get("deadLine"), "%Y-%m-%d %H:%M")
-    
+            # Assuming deadline time is in UTC
+            deadline = pytz.utc.localize(deadline)
+            
+            # Convert deadline to IST
+            deadline = deadline.astimezone(ist)
+
+            print(deadline, current_timestamp)
+            
             # Compare current timestamp with deadline
             if current_timestamp > deadline:
                 isActive = False
