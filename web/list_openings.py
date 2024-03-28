@@ -30,18 +30,11 @@ class ListOpenings(Resource):
         
 
         ist = pytz.timezone('Asia/Kolkata')
-        current_timestamp = datetime.datetime.now(ist)
+        current_timestamp = datetime.datetime.now(ist).strftime("%Y-%m-%d %H:%M")
         for job_document in job_documents:
 
-            deadline = datetime.datetime.strptime(job_document.get("deadLine"), "%Y-%m-%d %H:%M")
-            # Assuming deadline time is in UTC
-            deadline = pytz.utc.localize(deadline)
-            
-            # Convert deadline to IST
-            deadline = deadline.astimezone(ist)
-
-            print(deadline, current_timestamp)
-            
+            deadline = job_document.get("deadLine")
+    
             # Compare current timestamp with deadline
             if current_timestamp > deadline:
                 isActive = False
