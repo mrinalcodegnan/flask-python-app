@@ -29,9 +29,53 @@ class JobEmailSender(threading.Thread):
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>New Job Opportunity at {job_data['companyName']}!</title>
             <!-- CSS styles -->
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                }}
+                .container {{
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    background-color: #f9f9f9;
+                }}
+                .content {{
+                    text-align: left;
+                }}
+                h1, p {{
+                    margin-bottom: 20px;
+                }}
+                .button {{
+                    display: inline-block;
+                    padding: 10px 20px;
+                    background-color: #FFA500;
+                    color: #ffffff;
+                    text-decoration: none;
+                    border-radius: 5px;
+                }}
+                @keyframes fadeIn {{
+                    from {{ opacity: 0; }}
+                    to {{ opacity: 1; }}
+                }}
+                .fade-in {{
+                    animation: fadeIn 1s ease-in-out;
+                }}
+            </style>
         </head>
         <body>
-            <!-- Email content -->
+            <div class="container fade-in">
+                <h1>New Job Opportunity at {job_data['companyName']}!</h1>
+                <p>Dear Student,</p>
+                <p>We are excited to announce a new job opportunity available at {job_data['companyName']}.</p>
+                <p>The position of {job_data['jobRole']} is now open for applications.</p>
+                <p>Location: {job_data['jobLocation']}</p>
+                <p>CTC: {job_data['salary']}</p>
+                <p>Deadline to apply: {job_data['deadLine']}</p>
+                <p>Apply now to seize this opportunity!</p>
+                <a href="https://placements.codegnan.com" class="button">Apply Now</a>
+            </div>
         </body>
         </html>
         """
