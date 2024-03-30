@@ -28,6 +28,7 @@ class JobEmailSender(threading.Thread):
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>New Job Opportunity at {job_data['companyName']}!</title>
+            <!-- CSS styles -->
             <style>
                 body {{
                     font-family: Arial, sans-serif;
@@ -80,7 +81,7 @@ class JobEmailSender(threading.Thread):
         """
 
         # Email configuration
-        sender_email = "mrinalcodegnan@outlook.com"
+        sender_email = "Placements@codegnan.com"
         recipient_email = email
         subject = f"New Job Opportunity at {job_data['companyName']}!"
 
@@ -93,10 +94,10 @@ class JobEmailSender(threading.Thread):
         # Attach HTML content to the email
         msg.attach(MIMEText(html_content, 'html'))
 
-        # Send email using SMTP
-        smtp_server = smtplib.SMTP('smtp.office365.com', 587)  # Update SMTP server details
+        # Send email using SMTP (for Gmail)
+        smtp_server = smtplib.SMTP('smtp.gmail.com', 587)  # Update SMTP server details for Gmail
         smtp_server.starttls()
-        smtp_server.login(sender_email, 'Mrinal@iitm18')  # Update sender's email and password
+        smtp_server.login(sender_email, 'Codegnan@0818')  # Update sender's email and password
         smtp_server.sendmail(sender_email, recipient_email, msg.as_string())
         smtp_server.quit()
 
@@ -120,7 +121,13 @@ class JobPosting(Resource):
         jobRole = data.get('jobRole')
         graduates = data.get('graduates')
         salary = data.get('salary')
+        educationQualification = data.get('educationQualification')
+        department = data.get('department')
+        percentage = data.get('percentage')
+        technologies = data.get('technologies')
+        bond = data.get('bond')
         jobLocation = data.get('jobLocation')
+        specialNote = data.get("specialNote")
         deadLine = data.get("deadLine")
 
         # Insert job posting data into MongoDB
@@ -137,7 +144,13 @@ class JobPosting(Resource):
             "jobRole": jobRole,
             "graduates": graduates,
             "salary": salary,
+            "educationQualification": educationQualification,
+            "department": department,
+            "percentage": percentage,
+            "technologies": technologies,
+            "bond": bond,
             "jobLocation": jobLocation,
+            "specialNote": specialNote,
             "deadLine": deadLine
         }
         result = self.collection.insert_one(job_data)
