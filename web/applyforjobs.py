@@ -1,22 +1,118 @@
 from flask import request
 from flask_restful import Resource
 from pymongo import MongoClient
+import uuid
+from datetime import datetime
+import threading
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
-class ApplyJob(Resource):
+class JobEmailSender(threading.Thread):
+    def __init__(self, student_email, job_data):
+        super().__init__()
+        self.student_email = student_email
+        self.job_data = job_data
+
+    def run(self):
+        # Send email to the student
+        self.send_email(self.student_email, self.job_data)
+
+    def send_email(self, email, job_data):
+        # Email content in HTML format
+        html_content = f"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>New Job Application Confirmation</title>
+            <!-- CSS styles -->
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                }}
+                .container {{
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    background-color: #f9f9f9;
+                }}
+                .content {{
+                    text-align: left;
+                }}
+                h1, p {{
+                    margin-bottom: 20px;
+                }}
+                .button {{
+                    display: inline-block;
+                    padding: 10px 20px;
+                    background-color: #FFA500;
+                    color: #ffffff;
+                    text-decoration: none;
+                    border-radius: 5px;
+                }}
+                @keyframes fadeIn {{
+                    from {{ opacity: 0; }}
+                    to {{ opacity: 1; }}
+                }}
+                .fade-in {{
+                    animation: fadeIn 1s ease-in-out;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container fade-in">
+                <h1>New Job Application Confirmation</h1>
+                <p>Dear Student,</p>
+                <p>Thank you for applying for the position of {job_data['jobRole']} at {job_data['companyName']}.</p>
+                <p>Here are the details of the job:</p>
+                <p>Location: {job_data['jobLocation']}</p>
+                <p>CTC: {job_data['salary']}</p>
+                <p>We will review your application and contact you soon.</p>
+                <p>Best regards,</p>
+                <p>The Placement Team</p>
+            </div>
+        </body>
+        </html>
+        """
+
+        # Email configuration
+        sender_email = "Placements@codegnan.com"
+        recipient_email = email
+        subject = "Job Application Confirmation"
+
+        # Create message container
+        msg = MIMEMultipart('alternative')
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+        msg['Subject'] = subject
+
+        # Attach HTML content to the email
+        msg.attach(MIMEText(html_content, 'html'))
+
+        # Send email using SMTP (for Gmail)
+        smtp_server = smtplib.SMTP('smtp.gmail.com', 587)  # Update SMTP server details for Gmail
+        smtp_server.starttls()
+        smtp_server.login(sender_email, 'Codegnan@0818')  # Update sender's email and password
+        smtp_server.sendmail(sender_email, recipient_email, msg.as_string())
+        smtp_server.quit()
+
+class JobApplication(Resource):
     def __init__(self, client, db, job_collection, student_collection):
         super().__init__()
         self.client = client
         self.db_name = db
-        self.job_collection= job_collection
-        self.student_collection = student_collection
+        self.job_collection_name = job_collection
+        self.student_collection_name = student_collection
         self.db = self.client[self.db_name]
-        self.job_collection = self.db[self.job_collection]
-        self.student_collection = self.db[student_collection]
-        print("student col", self.student_collection)
-        print("job_col", self.job_collection)
+        self.job_collection = self.db[self.job_collection_name]
+        self.student_collection = self.db[self.student_collection_name]
 
     def post(self):
-        
+        # Extract data from the request
         data = request.get_json()
         student_id = data.get('student_id')
         job_id = data.get('job_id')
@@ -52,5 +148,9 @@ class ApplyJob(Resource):
                 return {"error": "Student already applied to this job"}, 400
         else:
             return {"error": "Student not found with the provided student_id"}, 404
+
+        # Start a thread to send email to the student
+        email_sender_thread = JobEmailSender(student_document.get('email'), job_document)
+        email_sender_thread.start()
 
         return {"message": "Student applied to job successfully"}, 200
