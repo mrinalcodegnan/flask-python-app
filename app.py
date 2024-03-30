@@ -107,7 +107,8 @@ class MyFlask(Flask):
             resource_class_kwargs={
                 'client' : self.client,
                 'db' : "codegnan_prod",
-                'collection': self.job_details_collection
+                'collection': self.job_details_collection,
+                'student_collection': self.student_login_collection
             }
         ),
         api.add_resource(
@@ -162,4 +163,4 @@ class MyFlask(Flask):
 app = MyFlask(__name__)
 app.add_api()
 CORS(app)
-app.run()
+
