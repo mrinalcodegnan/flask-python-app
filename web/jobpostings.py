@@ -28,7 +28,6 @@ class JobEmailSender(threading.Thread):
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>New Job Opportunity at {job_data['companyName']}!</title>
-            <!-- CSS styles -->
             <style>
                 body {{
                     font-family: Arial, sans-serif;
@@ -121,13 +120,7 @@ class JobPosting(Resource):
         jobRole = data.get('jobRole')
         graduates = data.get('graduates')
         salary = data.get('salary')
-        educationQualification = data.get('educationQualification')
-        department = data.get('department')
-        percentage = data.get('percentage')
-        technologies = data.get('technologies')
-        bond = data.get('bond')
         jobLocation = data.get('jobLocation')
-        specialNote = data.get("specialNote")
         deadLine = data.get("deadLine")
 
         # Insert job posting data into MongoDB
@@ -144,13 +137,7 @@ class JobPosting(Resource):
             "jobRole": jobRole,
             "graduates": graduates,
             "salary": salary,
-            "educationQualification": educationQualification,
-            "department": department,
-            "percentage": percentage,
-            "technologies": technologies,
-            "bond": bond,
             "jobLocation": jobLocation,
-            "specialNote": specialNote,
             "deadLine": deadLine
         }
         result = self.collection.insert_one(job_data)
