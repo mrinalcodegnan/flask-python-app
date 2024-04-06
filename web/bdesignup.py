@@ -120,7 +120,7 @@ class BdeSignup(Resource):
 
         # Check if the email already exists in the collection
         if self.collection.find_one({"email": email}):
-            return {"error": "Email already exists"}, 400
+            return {"error": "Email already exists"}, 409
 
         # Insert BDE signup data into MongoDB
         bde_data = {

@@ -82,7 +82,7 @@ class StudentSignup(Resource):
         rendered_html = render_template_string(html_content, name=name)
 
         # Email configuration
-        sender_email = "mrinalcodegnan@outlook.com"
+        sender_email = "Placements@codegnan.com"
         recipient_email = email
         subject = "Welcome to Codegnan Placements!"
 
@@ -95,10 +95,10 @@ class StudentSignup(Resource):
         # Attach HTML content to the email
         msg.attach(MIMEText(rendered_html, 'html'))
 
-        # Send email using SMTP
-        smtp_server = smtplib.SMTP('smtp.office365.com', 587)  # Update SMTP server details
+        # Send email using SMTP (for Gmail)
+        smtp_server = smtplib.SMTP('smtp.gmail.com', 587)  # Update SMTP server details for Gmail
         smtp_server.starttls()
-        smtp_server.login(sender_email, 'Mrinal@iitm18')  # Update sender's email and password
+        smtp_server.login(sender_email, 'Codegnan@0818')  # Update sender's email and password
         smtp_server.sendmail(sender_email, recipient_email, msg.as_string())
         smtp_server.quit()
 
@@ -135,7 +135,7 @@ class StudentSignup(Resource):
 
         # Check if the email already exists in the collection
         if self.collection.find_one({"email": email}):
-            return {"error": "Email already exists"}, 400
+            return {"error": "Email already exists"}, 409
 
         # Insert student signup data into MongoDB
         student_data = {
@@ -167,4 +167,3 @@ class StudentSignup(Resource):
 
         # Return a success message along with student data
         return {"message": "Student signup successful", "student": student_data}, 201
-
