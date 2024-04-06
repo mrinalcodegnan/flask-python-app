@@ -9,16 +9,17 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 class JobEmailSender(threading.Thread):
-    def __init__(self, student_email, job_data):
+    def __init__(self, student_name, student_email, job_data):
         super().__init__()
+        self.student_name = student_name
         self.student_email = student_email
         self.job_data = job_data
 
     def run(self):
         # Send email to the student
-        self.send_email(self.student_email, self.job_data)
+        self.send_email(self.student_name, self.student_email, self.job_data)
 
-    def send_email(self, email, job_data):
+    def send_email(self, name, email, job_data):
         # Email content in HTML format
         html_content = f"""
         <!DOCTYPE html>
@@ -66,7 +67,7 @@ class JobEmailSender(threading.Thread):
         <body>
             <div class="container fade-in">
                 <h1>New Job Application Confirmation</h1>
-                <p>Dear Student,</p>
+                <p>Dear {name},</p>
                 <p>Thank you for applying for the position of {job_data['jobRole']} at {job_data['companyName']}.</p>
                 <p>Here are the details of the job:</p>
                 <p>Location: {job_data['jobLocation']}</p>
@@ -150,7 +151,7 @@ class JobApplication(Resource):
             return {"error": "Student not found with the provided student_id"}, 404
 
         # Start a thread to send email to the student
-        email_sender_thread = JobEmailSender(student_document.get('email'), job_document)
+        email_sender_thread = JobEmailSender(student_document.get('name'), student_document.get('email'), job_document)
         email_sender_thread.start()
 
         return {"message": "Student applied to job successfully"}, 200

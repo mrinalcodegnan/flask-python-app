@@ -71,7 +71,7 @@ class StudentSignup(Resource):
                     <p>Congratulations on taking the first step towards a successful career!</p>
                     <p>At Codegnan Placements, we are committed to helping you achieve your goals and aspirations. Our team of experts is here to support you every step of the way.</p>
                     <p>Explore our website to discover a world of opportunities and resources tailored just for you.</p>
-                    <a href="https://www.codegnan.com" class="button">Explore Now</a>
+                    <a href="http://placements.codegnan.com/login/student" class="button">Explore Now</a>
                 </div>
             </div>
         </body>

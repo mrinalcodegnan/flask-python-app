@@ -163,4 +163,4 @@ class MyFlask(Flask):
 app = MyFlask(__name__)
 app.add_api()
 CORS(app)
-
+app.run()
