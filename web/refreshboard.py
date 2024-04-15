@@ -1,7 +1,9 @@
 import gspread
 import pandas as pd
+from flask import request
+from flask_restful import Resource
 
-class GoogleSheetReader:
+class GoogleSheetReader(Resource):
     def __init__(self, url, sheet_name):
         self.sheet_url = url
         self.sheet_name = sheet_name
