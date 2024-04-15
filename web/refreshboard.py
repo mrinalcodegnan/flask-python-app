@@ -1,6 +1,5 @@
 import gspread
 import pandas as pd
-from flask import request
 from flask_restful import Resource
 
 class GoogleSheetReader(Resource):
