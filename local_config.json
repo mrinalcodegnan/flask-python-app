@@ -16,7 +16,12 @@
     "COMPANY":{
         "collection_name":"company_data_prod"
     }
+},
+"DASHBOARD_GSHEET":{
+    "url":"https://docs.google.com/spreadsheets/d/1v1j9zVtAQOnLGw_GhzwOS_tfF_v3tQ2MVwJa2IrJfdo/edit?usp=sharing",
+    "sheetname":"Sheet1"
 }
+
 }
 
   

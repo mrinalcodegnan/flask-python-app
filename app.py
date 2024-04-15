@@ -2,6 +2,7 @@
 from flask import Flask
 
 from flask_cors import CORS
+from web.refreshboard import GoogleSheetReader
 from flask_restful import Api
 from web.bdelogin import BdeLogin
 from web.resumedownload import DownloadResume
@@ -29,6 +30,7 @@ class MyFlask(Flask):
         super().__init__(*args, **kwargs)
 
         uri = MONGO_CONFIG['url']
+        
         parsed_uri = urllib.parse.urlparse(uri)
         escaped_username = urllib.parse.quote_plus(parsed_uri.username)
         escaped_password = urllib.parse.quote_plus(parsed_uri.password)
@@ -44,6 +46,9 @@ class MyFlask(Flask):
         self.student_login_collection = MONGO_CONFIG["STUDENT_LOGIN"]["collection_name"]
         self.job_details_collection = MONGO_CONFIG["JOBS"]["collection_name"]
         self.company_login_collection = MONGO_CONFIG["COMPANY"]["collection_name"]
+
+        self.DASHBOARDSHEET = config_data["DASHBOARD_GSHEET"]["url"]
+        self.SHEET_NAME = config_data["DASHBOARD_GSHEET"]["sheetname"]
 
     def add_api(self):
         api = Api(self, catch_all_404s=True)
@@ -158,9 +163,18 @@ class MyFlask(Flask):
                 'db_name': "codegnan_prod"
             }
         )
+        
+        api.add_resource(
+            GoogleSheetReader,
+            "/api/v1/refreshdashboard",
+            resource_class_kwargs = {
+                'url' : self.DASHBOARDSHEET,
+                'sheet_name' : self.SHEET_NAME
+            }
+        )
 
 
 app = MyFlask(__name__)
 app.add_api()
 CORS(app)
-app.run()
+#app.run()
