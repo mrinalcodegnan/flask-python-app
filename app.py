@@ -2,6 +2,7 @@
 from flask import Flask
 
 from flask_cors import CORS
+from web.select_all import UpdateJobApplicants
 from web.refreshboard import GoogleSheetReader
 from flask_restful import Api
 from web.bdelogin import BdeLogin
@@ -161,6 +162,17 @@ class MyFlask(Flask):
             resource_class_kwargs = {
                 'client' : self.client,
                 'db_name': "codegnan_prod"
+            }
+        )
+
+        api.add_resource(
+            UpdateJobApplicants,
+            "/api/v1/updatejobapplicants",
+            resource_class_kwargs={
+                'client' : self.client,
+                'db' : "codegnan_prod",
+                'job_collection': self.job_details_collection,
+                'student_collection': self.student_login_collection
             }
         )
         
