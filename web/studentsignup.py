@@ -9,8 +9,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 class StudentSignup(Resource):
-    def __init__(self, client, db, collection):
-        super().__init__()
+    def _init_(self, client, db, collection):
+        super()._init_()
         self.client = client
         self.db_name = db
         self.collection_name = collection
@@ -106,22 +106,26 @@ class StudentSignup(Resource):
         # Extract data from the request
         data = request.form
         id = str(uuid.uuid4())
+        print(data,"before mongo")
 
         timestamp = datetime.now().isoformat()
         name = data.get('name')
-        age = data.get('age')
+        age = int(data.get('age'))
         password = data.get('password')
-        phone = data.get('mobileNumber')
+        phone = int(data.get('mobileNumber'))
         email = data.get('email')
         state = data.get('state')
         qualification = data.get("qualification")
-            
-        city = data.get("cityname")
+        city = data.get("cityName")
         department = data.get("department")
         yearOfPassing = data.get("yearOfPassing")
         collegeName = data.get("collegeName")
+        highestGraduationCGPA = float(data.get("highestGraduationCGPA"))
+        studentSkills = data.getlist("studentSkills[]")
+        tenthStandard = int(data.get("tenthStandard"))
+        twelfthStandard = int(data.get("twelfthStandard"))
         resume_file = request.files.get('resume')
-
+        
         # Check if the database exists, if not, create it
         if self.db_name not in self.client.list_database_names():
             self.client[self.db_name]
@@ -152,7 +156,11 @@ class StudentSignup(Resource):
             "yearOfPassing": yearOfPassing,
             "city": city,
             "department": department,
-            "collegeName": collegeName
+            "collegeName": collegeName,
+            "highestGraduationCGPA": highestGraduationCGPA,
+            "studentSkills": studentSkills,
+            "tenthStandard": tenthStandard,
+            "twelfthStandard":twelfthStandard
         }
         result = self.collection.insert_one(student_data)
         student_data['_id'] = str(result.inserted_id)
@@ -162,7 +170,7 @@ class StudentSignup(Resource):
 
         # Add the resume file ID to student data
         student_data['resume_id'] = str(resume_id)
-
+        print("student signup",student_data)
                # Send welcome email to the student
         self.send_email(name, email)
 

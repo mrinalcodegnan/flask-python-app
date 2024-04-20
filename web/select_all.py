@@ -31,8 +31,8 @@ class UpdateJobApplicants(Resource):
                 applicants_ids = job_document.get('applicants_ids', [])
 
                 # Calculate the set of selected and rejected students
-                selected_students = list(set(selected_student_ids))
-                rejected_students = list(set(applicants_ids) - set(selected_student_ids))
+                rejected_students = list(set(selected_student_ids))
+                selected_students = list(set(applicants_ids) - set(selected_student_ids))
 
                 # Update the job document with selected and rejected students
                 update_result = self.job_collection.update_one(
