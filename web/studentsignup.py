@@ -9,8 +9,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 class StudentSignup(Resource):
-    def _init_(self, client, db, collection):
-        super()._init_()
+    def __init__(self, client, db, collection):
+        super().__init__()
         self.client = client
         self.db_name = db
         self.collection_name = collection
