@@ -49,6 +49,7 @@ class MyFlask(Flask):
         self.company_login_collection = MONGO_CONFIG["COMPANY"]["collection_name"]
 
         self.DASHBOARDSHEET = config_data["DASHBOARD_GSHEET"]["url"]
+        self.DASHBOARD_COLLECTION = config_data["DASHBOARD_GSHEET"]["collection"]
         self.SHEET_NAME = config_data["DASHBOARD_GSHEET"]["sheetname"]
 
     def add_api(self):
@@ -180,8 +181,6 @@ class MyFlask(Flask):
             GoogleSheetReader,
             "/api/v1/refreshdashboard",
             resource_class_kwargs = {
-                'url' : self.DASHBOARDSHEET,
-                'sheet_name' : self.SHEET_NAME
             }
         )
 
@@ -189,4 +188,4 @@ class MyFlask(Flask):
 app = MyFlask(__name__)
 app.add_api()
 CORS(app)
-#app.run()
+app.run()

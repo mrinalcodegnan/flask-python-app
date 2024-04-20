@@ -115,6 +115,7 @@ class StudentSignup(Resource):
         email = data.get('email')
         state = data.get('state')
         qualification = data.get("qualification")
+            
         city = data.get("cityname")
         department = data.get("department")
         yearOfPassing = data.get("yearOfPassing")

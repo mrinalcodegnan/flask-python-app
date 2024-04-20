@@ -1,18 +1,60 @@
-import gspread
+
 import pandas as pd
 from flask_restful import Resource
 
 class GoogleSheetReader(Resource):
-    def __init__(self, url, sheet_name):
-        self.sheet_url = url
-        self.sheet_name = sheet_name
-        self.client = gspread.authorize(None)  # No authentication needed
+    def __init__(self):
+        super
 
     def get(self):
-        sheet = self.client.open_by_url(self.sheet_url)
-        worksheet = sheet.worksheet(self.sheet_name)
-        data = worksheet.get_all_values()
-        headers = data.pop(0)
-        df = pd.DataFrame(data, columns=headers)
-        print(df.head())
-        return df
+        data = pd.read_csv('assets/homepage.csv')
+        branch_list = data['Branch'].to_list()
+        companies = data['Company Name'].to_list()
+        colleges_list  = data['College'].to_list()
+        yops = data['YOP'].to_list()
+
+        branch_list_map = {}
+        companies_map = {}
+        colleges_list_map = {}
+        yops_list = {}
+
+        for branch in branch_list:
+            if branch in branch_list_map:
+                branch_list_map[branch] += 1
+            else:
+                branch_list_map[branch] = 1
+
+        for company in companies:
+            if company in companies_map:
+                companies_map[company] += 1
+            else:
+                companies_map[company] = 1
+
+        for colleges in colleges_list:
+            if colleges in colleges_list_map:
+                colleges_list_map[colleges] += 1
+            else:
+                colleges_list_map[colleges] = 1
+
+        for yop in yops:
+            if yop in yops_list:
+                yops_list[yop] += 1
+            else:
+                yops_list[yop] = 1
+
+        yops_list = dict(sorted(yops_list.items(), key=lambda x: x[1], reverse=True))
+
+        companies_map = dict(sorted(companies_map.items(), key=lambda x: x[1], reverse=True))
+
+        colleges_list_map = dict(sorted(colleges_list_map.items(), key=lambda x: x[1], reverse=True))
+
+        branch_list_map = dict(sorted(branch_list_map.items(), key=lambda x: x[1], reverse=True))
+
+        FINAL_LIST = {
+            "YOP_DICT" : yops_list,
+            "COMPANIES" : companies_map,
+            "COLLEGES_LIST" : colleges_list_map,
+            "BRANCH_LIST" : branch_list_map
+        }
+
+        return FINAL_LIST
