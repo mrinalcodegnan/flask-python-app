@@ -6,7 +6,7 @@ from web.select_all import UpdateJobApplicants
 from web.refreshboard import GoogleSheetReader
 from flask_restful import Api
 from web.bdelogin import BdeLogin
-from web.resumedownload import DownloadResume
+from web.resumedownload import DownloadResumes
 from web.bdesignup import BdeSignup
 from web.companylogin import CompanyLogin
 from web.companysignup import CompanySignup
@@ -158,11 +158,11 @@ class MyFlask(Flask):
             }
         )
         api.add_resource(
-            DownloadResume,
+            DownloadResumes,
             "/api/v1/downloadresume",
             resource_class_kwargs = {
                 'client' : self.client,
-                'db_name': "codegnan_prod"
+                'db': "codegnan_prod"
             }
         )
 

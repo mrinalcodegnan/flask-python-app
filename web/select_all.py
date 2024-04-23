@@ -22,6 +22,7 @@ class UpdateJobApplicants(Resource):
             data = request.get_json()
             job_id = data.get('job_id')
             selected_student_ids = data.get('selected_student_ids', [])
+            
 
             # Retrieve the job document
             job_document = self.job_collection.find_one({"id": job_id})
@@ -29,10 +30,14 @@ class UpdateJobApplicants(Resource):
             if job_document:
                 # Retrieve the list of applicants from the job document
                 applicants_ids = job_document.get('applicants_ids', [])
+                
 
                 # Calculate the set of selected and rejected students
-                rejected_students = list(set(selected_student_ids))
-                selected_students = list(set(applicants_ids) - set(selected_student_ids))
+                selected_students = list(set(selected_student_ids))
+                rejected_students = list(set(applicants_ids) - set(selected_student_ids))
+
+                print(selected_students)
+                print(rejected_students)
 
                 # Update the job document with selected and rejected students
                 update_result = self.job_collection.update_one(
@@ -42,8 +47,8 @@ class UpdateJobApplicants(Resource):
                         "rejected_students_ids": rejected_students
                     }}
                 )
-
-                if update_result.modified_count > 0:
+                
+                if update_result.modified_count >= 0:
                     # Update student documents
                     self.update_student_documents(selected_students, rejected_students, job_id)
 
@@ -51,8 +56,8 @@ class UpdateJobApplicants(Resource):
                     company_name = job_document.get('companyName')
                     job_position = job_document.get('jobRole')
 
-                    # Send custom emails using multithreading
-                    Thread(target=self.send_custom_email, args=(selected_students, rejected_students, company_name, job_position)).start()
+                    self.send_custom_email(selected_students,rejected_students, company_name, job_position)
+                    #Thread(target=self.send_custom_email, args=(selected_students, rejected_students, company_name, job_position)).start()
 
                     return {"message": "Job applicants and student documents updated successfully"}, 200
                 else:
@@ -65,6 +70,8 @@ class UpdateJobApplicants(Resource):
 
     def update_student_documents(self, selected_students, rejected_students, job_id):
         # Update selected students
+
+        
         for student_id in selected_students:
             self.student_collection.update_one(
                 {"id": student_id},
