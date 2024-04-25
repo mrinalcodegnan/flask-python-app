@@ -15,8 +15,8 @@ class DownloadResumes(Resource):
 
     def post(self):
         # Get the list of student IDs from the request body
-        student_ids = ["dd3bd3c6-b560-4ea8-8e61-c603df28ae09", "fa845f65-452d-4b93-af3e-a7a72ab702de"] #request.json.get("student_ids", [])
-        print("Hello there!")
+        student_ids = request.json.get("student_ids", [])
+        
         if not student_ids:
             return {"error": "Missing required parameter: student_ids"}, 400
 
