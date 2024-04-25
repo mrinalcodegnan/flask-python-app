@@ -28,7 +28,7 @@ class GetAppliedStudentList(Resource):
                 self.db.create_collection(self.job_collection_name)
 
             job_document = self.job_collection.find_one({"id": job_id})
-
+            print("students applied jobs",job_document)
             if job_document:
                 applicants_ids = job_document.get('applicants_ids', [])
 
@@ -51,9 +51,9 @@ class GetAppliedStudentList(Resource):
                             "yearOfPassing": student_document.get('yearOfPassing'),
                             "city" : student_document.get('city'),
                             "department" : student_document.get('department'),
-                            "collegeName": student_document.get('collegeName')
+                            "collegeName": student_document.get('collegeName'),
                         })
-                return {"students_applied": student_details}, 200
+                return {"students_applied": student_details,"jobSkills":job_document["jobSkills"]}, 200
             else:
                 return {"error": "Job not found with the provided job_id"}, 404
 

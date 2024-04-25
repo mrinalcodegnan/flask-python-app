@@ -129,6 +129,7 @@ class JobPosting(Resource):
         jobLocation = data.get('jobLocation')
         specialNote = data.get("specialNote")
         deadLine = data.get("deadLine")
+        jobSkills = data.get("selectedSkills", [])
 
         # Insert job posting data into MongoDB
         if self.db_name not in self.client.list_database_names():
@@ -151,7 +152,8 @@ class JobPosting(Resource):
             "bond": bond,
             "jobLocation": jobLocation,
             "specialNote": specialNote,
-            "deadLine": deadLine
+            "deadLine": deadLine,
+            "jobSkills":jobSkills
         }
         result = self.collection.insert_one(job_data)
         job_data['_id'] = str(result.inserted_id)
