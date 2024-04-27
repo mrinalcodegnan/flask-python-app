@@ -2,6 +2,7 @@
 from flask import Flask
 
 from flask_cors import CORS
+from web.get_student_details import GetStudentDetails
 from web.select_all import UpdateJobApplicants
 from web.refreshboard import GoogleSheetReader
 from flask_restful import Api
@@ -181,6 +182,16 @@ class MyFlask(Flask):
             GoogleSheetReader,
             "/api/v1/refreshdashboard",
             resource_class_kwargs = {
+            }
+        )
+
+        api.add_resource(
+            GetStudentDetails,
+            "/api/v1/getstudentdetails",
+            resource_class_kwargs={
+                'client' : self.client,
+                'db' : "codegnan_prod",
+                'student_collection': self.student_login_collection
             }
         )
 
