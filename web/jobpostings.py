@@ -9,17 +9,17 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 class JobEmailSender(threading.Thread):
-    def __init__(self, job_data, student_emails):
+    def __init__(self, job_data, student_contacts):
         super().__init__()
         self.job_data = job_data
-        self.student_emails = student_emails
+        self.student_contacts = student_contacts
 
     def run(self):
         # Email sending logic
-        for email in self.student_emails:
-            self.send_email(email, self.job_data)
+        for student in self.student_contacts:
+            self.send_email(student["email"], student["name"], self.job_data)
 
-    def send_email(self, email, job_data):
+    def send_email(self, email, name, job_data):
         # Email content in HTML format
         html_content = f"""
         <!DOCTYPE html>
@@ -67,7 +67,7 @@ class JobEmailSender(threading.Thread):
         <body>
             <div class="container fade-in">
                 <h1>New Job Opportunity at {job_data['companyName']}!</h1>
-                <p>Dear Student,</p>
+                <p>Dear {name},</p>
                 <p>We are excited to announce a new job opportunity available at {job_data['companyName']}.</p>
                 <p>The position of {job_data['jobRole']} is now open for applications.</p>
                 <p>Location: {job_data['jobLocation']}</p>
@@ -94,10 +94,10 @@ class JobEmailSender(threading.Thread):
         # Attach HTML content to the email
         msg.attach(MIMEText(html_content, 'html'))
 
-        # Send email using SMTP (for Gmail)
-        smtp_server = smtplib.SMTP('smtp.gmail.com', 587)  # Update SMTP server details for Gmail
+        # Send email using SMTP (Gmail example)
+        smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
         smtp_server.starttls()
-        smtp_server.login(sender_email, 'Codegnan@0818')  # Update sender's email and password
+        smtp_server.login(sender_email, 'Codegnan@0818')  # Update with correct credentials
         smtp_server.sendmail(sender_email, recipient_email, msg.as_string())
         smtp_server.quit()
 
@@ -143,7 +143,7 @@ class JobPosting(Resource):
             "timestamp": timestamp,
             "companyName": companyName,
             "jobRole": jobRole,
-            "graduates": graduates,
+            "graduates": data.get('graduates', []),
             "salary": salary,
             "educationQualification": educationQualification,
             "department": department,
@@ -153,17 +153,18 @@ class JobPosting(Resource):
             "jobLocation": jobLocation,
             "specialNote": specialNote,
             "deadLine": deadLine,
-            "jobSkills":jobSkills
+            "jobSkills": jobSkills,
         }
+        
         result = self.collection.insert_one(job_data)
         job_data['_id'] = str(result.inserted_id)
 
-        # Fetch only email addresses from student documents
-        student_emails_cursor = self.student_collection.find({}, {"email": 1})
-        student_emails = [student["email"] for student in student_emails_cursor]
+        # Fetch email addresses and names from student documents
+        student_contacts_cursor = self.student_collection.find({}, {"email": 1, "name": 1})
+        student_contacts = [student for student in student_contacts_cursor]
 
-        # Start a thread to send emails in the background
-        email_sender_thread = JobEmailSender(job_data, student_emails)
+        # Start a thread to send emails with student names in the background
+        email_sender_thread = JobEmailSender(job_data, student_contacts)
         email_sender_thread.start()
 
         return {"message": "Job posting successful", "job_posting": job_data}, 200

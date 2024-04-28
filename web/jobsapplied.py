@@ -16,9 +16,6 @@ class GetAppliedJobsList(Resource):
     def get(self):
         try:
             # Search for the student document with the provided student_id
-
-            # data = request.get_json()
-            # student_id = data.get('student_id')
             student_id = request.args.get('student_id')
             student_document = self.student_collection.find_one({"id": student_id})
 
