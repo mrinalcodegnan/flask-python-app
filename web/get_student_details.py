@@ -29,9 +29,10 @@ class GetStudentDetails(Resource):
     def get(self):
         # Validate and parse input data
         try:
-            data = request.get_json(force=True)
-            student_id = data.get("student_id")
-
+            # data = request.get_json(force=True)
+            # student_id = data.get("student_id")
+            student_id = request.args.get('student_id')
+            print("studnet details ",student_id)
             if not student_id:
                 self.logger.error("Invalid input: 'student_id' is missing.")
                 abort(400, message="Invalid input: 'student_id' is required.")
