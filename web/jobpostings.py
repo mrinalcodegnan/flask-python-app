@@ -74,7 +74,7 @@ class JobEmailSender(threading.Thread):
                 <p>CTC: {job_data['salary']}</p>
                 <p>Deadline to apply: {job_data['deadLine']}</p>
                 <p>Apply now to seize this opportunity!</p>
-                <a href="https://placements.codegnan.com" class="button">Apply Now</a>
+                <a href="https://placements.codegnan.com/directapply/{job_data['student_id']}/{job_data['id']}" class="button">Apply Now</a>
             </div>
         </body>
         </html>
@@ -154,6 +154,7 @@ class JobPosting(Resource):
             "specialNote": specialNote,
             "deadLine": deadLine,
             "jobSkills": jobSkills,
+            "student_id": data.get('student_id') # Adding student_id to the job_data
         }
         
         result = self.collection.insert_one(job_data)
