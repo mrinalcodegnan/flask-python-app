@@ -7,6 +7,7 @@ from web.select_all import UpdateJobApplicants
 from web.refreshboard import GoogleSheetReader
 from flask_restful import Api
 from web.bdelogin import BdeLogin
+from web.get_job_details import GetJobDetails
 from web.resumedownload import DownloadResumes
 from web.bdesignup import BdeSignup
 from web.companylogin import CompanyLogin
@@ -195,6 +196,15 @@ class MyFlask(Flask):
             }
         )
 
+        api.add_resource(
+            GetJobDetails,
+            "/api/v1/getjobdetails",
+            resource_class_kwargs={
+                'client' : self.client,
+                'db' : "codegnan_prod",
+                'job_collection': self.job_details_collection
+            }
+        )
 
 app = MyFlask(__name__)
 app.add_api()
