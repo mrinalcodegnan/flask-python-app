@@ -6,11 +6,13 @@ from io import BytesIO
 import zipfile
 
 class DownloadResumes(Resource):
-    def __init__(self, client, db):
+    def __init__(self, client, db, student_collection):
         super().__init__()
         self.client = client
         self.db_name = db
+        self.student_collection_name = student_collection
         self.db = self.client[self.db_name]
+        self.student_collection = self.db[self.student_collection_name]
         self.fs = GridFS(self.db)  # Initialize GridFS for retrieving files
 
     def post(self):
@@ -25,22 +27,33 @@ class DownloadResumes(Resource):
 
         with zipfile.ZipFile(zip_data, 'w', zipfile.ZIP_DEFLATED) as zip_archive:
             for student_id in student_ids:
-                # Find the file document in fs.files collection by filename
-                file_doc = self.db.fs.files.find_one({"filename": student_id})
+                # Find the student document in the student collection by student ID
+                student_doc = self.student_collection.find_one({"id": student_id})
 
-                if file_doc:
-                    # Get the file's ID and retrieve the file from GridFS
-                    file_id = file_doc["_id"]
-                    grid_out = self.fs.get(file_id)
+                if student_doc:
+                    # Get the student's name
+                    student_name = student_doc.get("name", "Unknown")
 
-                    # Read the file's content
-                    pdf_content = grid_out.read()
+                    # Find the file document in fs.files collection by filename (student ID)
+                    file_doc = self.db.fs.files.find_one({"filename": student_id})
 
-                    # Add the content to the zip archive with a specified name
-                    zip_archive.writestr(f"{student_id}.pdf", pdf_content)
+                    if file_doc:
+                        # Get the file's ID and retrieve the file from GridFS
+                        file_id = file_doc["_id"]
+                        grid_out = self.fs.get(file_id)
+
+                        # Read the file's content
+                        pdf_content = grid_out.read()
+
+                        # Add the content to the zip archive with student name as filename
+                        zip_archive.writestr(f"{student_name}.pdf", pdf_content)
+                    else:
+                        # Log or handle if a file is not found
+                        print(f"No file found with filename '{student_id}'")
+
                 else:
-                    # Log or handle if a file is not found
-                    print(f"No file found with filename '{student_id}'")
+                    # Log or handle if a student document is not found
+                    print(f"No student found with ID '{student_id}'")
 
         # Reset the position of the zip_data for reading
         zip_data.seek(0)
@@ -52,3 +65,4 @@ class DownloadResumes(Resource):
             as_attachment=True,
             download_name="resumes.zip"  # Name for the downloaded zip file
         )
+

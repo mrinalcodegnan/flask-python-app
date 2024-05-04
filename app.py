@@ -164,7 +164,8 @@ class MyFlask(Flask):
             "/api/v1/downloadresume",
             resource_class_kwargs = {
                 'client' : self.client,
-                'db': "codegnan_prod"
+                'db': "codegnan_prod",
+                "student_collection": self.student_login_collection
             }
         )
 
