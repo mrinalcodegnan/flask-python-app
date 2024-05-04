@@ -17,9 +17,9 @@ class JobEmailSender(threading.Thread):
     def run(self):
         # Email sending logic
         for student in self.student_contacts:
-            self.send_email(student["email"], student["name"], self.job_data)
+            self.send_email(student["email"], student["name"], student["id"], self.job_data)
 
-    def send_email(self, email, name, job_data):
+    def send_email(self, email, name, student_id, job_data):
         # Email content in HTML format
         html_content = f"""
         <!DOCTYPE html>
@@ -74,7 +74,7 @@ class JobEmailSender(threading.Thread):
                 <p>CTC: {job_data['salary']}</p>
                 <p>Deadline to apply: {job_data['deadLine']}</p>
                 <p>Apply now to seize this opportunity!</p>
-                <a href="https://placements.codegnan.com/directapply/{job_data['student_id']}/{job_data['id']}" class="button">Apply Now</a>
+                <a href="https://placements.codegnan.com/directapply/{student_id}/{job_data['id']}" class="button">Apply Now</a>
             </div>
         </body>
         </html>
@@ -130,6 +130,7 @@ class JobPosting(Resource):
         specialNote = data.get("specialNote")
         deadLine = data.get("deadLine")
         jobSkills = data.get("selectedSkills", [])
+        student_id = data.get('student_id')  # Extract student_id from request data
 
         # Insert job posting data into MongoDB
         if self.db_name not in self.client.list_database_names():
@@ -154,17 +155,17 @@ class JobPosting(Resource):
             "specialNote": specialNote,
             "deadLine": deadLine,
             "jobSkills": jobSkills,
-            "student_id": data.get('student_id') # Adding student_id to the job_data
+            "student_id": student_id  # Adding student_id to the job_data
         }
         
         result = self.collection.insert_one(job_data)
         job_data['_id'] = str(result.inserted_id)
 
-        # Fetch email addresses and names from student documents
-        student_contacts_cursor = self.student_collection.find({}, {"email": 1, "name": 1})
+        # Fetch email addresses, names, and student_ids from student documents
+        student_contacts_cursor = self.student_collection.find({}, {"email": 1, "name": 1, "id": 1})
         student_contacts = [student for student in student_contacts_cursor]
 
-        # Start a thread to send emails with student names in the background
+        # Start a thread to send emails with student names and student_ids in the background
         email_sender_thread = JobEmailSender(job_data, student_contacts)
         email_sender_thread.start()
 
