@@ -9,12 +9,11 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 class JobEmailSender(threading.Thread):
-    def __init__(self, student_name, student_email, job_data, student_id):
-        super().__init__()
+    def _init_(self, student_name, student_email, job_data):
+        super()._init_()
         self.student_name = student_name
         self.student_email = student_email
         self.job_data = job_data
-        self.student_id = student_id
 
     def run(self):
         # Send email to the student
@@ -22,8 +21,6 @@ class JobEmailSender(threading.Thread):
 
     def send_email(self, name, email, job_data):
         # Email content in HTML format
-        apply_now_url = f"https://placements.codegnan.com/api/v1/applyforjob?student_id={self.student_id}&job_id={job_data['id']}"
-
         html_content = f"""
         <!DOCTYPE html>
         <html lang="en">
@@ -78,7 +75,6 @@ class JobEmailSender(threading.Thread):
                 <p>We will review your application and contact you soon.</p>
                 <p>Best regards,</p>
                 <p>The Placement Team</p>
-                <a href="{apply_now_url}" class="button">Apply Now</a>
             </div>
         </body>
         </html>
@@ -106,8 +102,8 @@ class JobEmailSender(threading.Thread):
         smtp_server.quit()
 
 class JobApplication(Resource):
-    def __init__(self, client, db, job_collection, student_collection):
-        super().__init__()
+    def _init_(self, client, db, job_collection, student_collection):
+        super()._init_()
         self.client = client
         self.db_name = db
         self.job_collection_name = job_collection
@@ -155,7 +151,7 @@ class JobApplication(Resource):
             return {"error": "Student not found with the provided student_id"}, 404
 
         # Start a thread to send email to the student
-        email_sender_thread = JobEmailSender(student_document.get('name'), student_document.get('email'), job_document, student_id)
+        email_sender_thread = JobEmailSender(student_document.get('name'), student_document.get('email'), job_document)
         email_sender_thread.start()
 
         return {"message": "Student applied to job successfully"}, 200
