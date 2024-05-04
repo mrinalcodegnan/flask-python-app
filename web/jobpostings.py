@@ -1,3 +1,4 @@
+from flask import request
 from flask_restful import Resource
 from pymongo import MongoClient
 import uuid
@@ -8,8 +9,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 class JobEmailSender(threading.Thread):
-    def __init__(self, job_data, student_contacts):
-        super().__init__()
+    def _init_(self, job_data, student_contacts):
+        super()._init_()
         self.job_data = job_data
         self.student_contacts = student_contacts
 
@@ -101,8 +102,8 @@ class JobEmailSender(threading.Thread):
         smtp_server.quit()
 
 class JobPosting(Resource):
-    def __init__(self, client, db, collection, student_collection):
-        super().__init__()
+    def _init_(self, client, db, collection, student_collection):
+        super()._init_()
         self.client = client
         self.db_name = db
         self.collection_name = collection
