@@ -1,4 +1,3 @@
-from flask import request
 from flask_restful import Resource
 from pymongo import MongoClient
 import uuid
@@ -21,8 +20,6 @@ class JobEmailSender(threading.Thread):
 
     def send_email(self, email, name, student_id, job_data):
         # Email content in HTML format
-        apply_now_url = f"https://placements.codegnan.com/api/v1/applyforjob?student_id={student_id}&job_id={job_data['id']}"
-
         html_content = f"""
         <!DOCTYPE html>
         <html lang="en">
@@ -76,7 +73,7 @@ class JobEmailSender(threading.Thread):
                 <p>CTC: {job_data['salary']}</p>
                 <p>Deadline to apply: {job_data['deadLine']}</p>
                 <p>Apply now to seize this opportunity!</p>
-                <a href="{apply_now_url}" class="button">Apply Now</a>
+                <a href="https://placements.codegnan.com/directapply/{student_id}/{job_data['id']}" class="button">Apply Now</a>
             </div>
         </body>
         </html>
