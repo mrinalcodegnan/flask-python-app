@@ -22,7 +22,7 @@ class JobEmailSender(threading.Thread):
 
     def send_email(self, name, email, job_data):
         # Email content in HTML format
-        apply_now_url = f"https://yourdomain.com/api/v1/applyforjob?student_id={self.student_id}&job_id={job_data['id']}"
+        apply_now_url = f"https://placements.codegnan.com/api/v1/applyforjob?student_id={self.student_id}&job_id={job_data['id']}"
 
         html_content = f"""
         <!DOCTYPE html>
