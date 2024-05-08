@@ -21,11 +21,18 @@ class GetAppliedStudentList(Resource):
             if self.job_collection_name not in self.db.list_collection_names():
                 self.db.create_collection(self.job_collection_name)
             job_document = self.job_collection.find_one({"id": job_id})
+            if "rejected_students_ids" not in job_document:
+                job_document["rejected_students_ids"] = []
+
+            if "selected_students_ids" not in job_document:
+                job_document["selected_students_ids"] = []
+
+            print(type(job_document))
             if job_document:
                 applicants_ids = job_document.get('applicants_ids', [])
                 student_details = []
                 for student_id in applicants_ids:
-                    student_document = self.student_collection.find_one({"id": student_id})
+                    student_document = self.student_collection.find_one({"id": student_id}, {"_id": 0})
                     if student_document:
                         student_details.append({
                             "student_id": student_document.get('id'),
@@ -44,7 +51,7 @@ class GetAppliedStudentList(Resource):
                             "department" : student_document.get('department'),
                             "collegeName": student_document.get('collegeName'),
                         })
-                print(job_document)
+                
                 return {"students_applied": student_details,"jobSkills":job_document["jobSkills"],"rejected_students_ids":job_document["rejected_students_ids"],"selected_students_ids":job_document["selected_students_ids"]}, 200
             else:
                 return {"error": "Job not found with the provided job_id"}, 404
