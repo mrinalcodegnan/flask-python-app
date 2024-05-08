@@ -13,7 +13,7 @@ class GetJobDetails(Resource):
         if not job_id:
             return {"error": "Missing 'job_id' parameter"}, 400
 
-        job_document = self.job_collection.find_one({"id": job_id})
+        job_document = self.job_collection.find_one({"id": job_id}, {"_id": 0})  # Exclude _id field
         if not job_document:
             return {"error": "Job not found"}, 404
 
