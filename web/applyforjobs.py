@@ -9,8 +9,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 class JobEmailSender(threading.Thread):
-    def _init_(self, student_name, student_email, job_data):
-        super()._init_()
+    def __init__(self, student_name, student_email, job_data):
+        super().__init__()
         self.student_name = student_name
         self.student_email = student_email
         self.job_data = job_data
@@ -102,8 +102,8 @@ class JobEmailSender(threading.Thread):
         smtp_server.quit()
 
 class JobApplication(Resource):
-    def _init_(self, client, db, job_collection, student_collection):
-        super()._init_()
+    def __init__(self, client, db, job_collection, student_collection):
+        super().__init__()
         self.client = client
         self.db_name = db
         self.job_collection_name = job_collection
