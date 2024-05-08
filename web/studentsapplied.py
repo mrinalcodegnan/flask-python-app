@@ -1,7 +1,6 @@
 from flask import request
 from flask_restful import Resource
 from pymongo import MongoClient
-
 class GetAppliedStudentList(Resource):
     def __init__(self, client, db, job_collection, student_collection):
         super().__init__()
@@ -12,26 +11,18 @@ class GetAppliedStudentList(Resource):
         self.db = self.client[self.db_name]
         self.job_collection = self.db[self.job_collection_name]
         self.student_collection = self.db[self.student_collection_name]
-
     def get(self):
         try:
-            # data = request.get_json()
-            # job_id = data.get('job_id')
             job_id = request.args.get('job_id')
-            print("job id",job_id)
             # Check if the database exists, if not, create it
             if self.db_name not in self.client.list_database_names():
                 self.client[self.db_name]
-
             # Check if the job collection exists, if not, create it
             if self.job_collection_name not in self.db.list_collection_names():
                 self.db.create_collection(self.job_collection_name)
-
             job_document = self.job_collection.find_one({"id": job_id})
-            print("students applied jobs",job_document)
             if job_document:
                 applicants_ids = job_document.get('applicants_ids', [])
-
                 student_details = []
                 for student_id in applicants_ids:
                     student_document = self.student_collection.find_one({"id": student_id})
@@ -53,9 +44,9 @@ class GetAppliedStudentList(Resource):
                             "department" : student_document.get('department'),
                             "collegeName": student_document.get('collegeName'),
                         })
-                return {"students_applied": student_details,"jobSkills":job_document["jobSkills"]}, 200
+                print(job_document)
+                return {"students_applied": student_details,"jobSkills":job_document["jobSkills"],"rejected_students_ids":job_document["rejected_students_ids"],"selected_students_ids":job_document["selected_students_ids"]}, 200
             else:
                 return {"error": "Job not found with the provided job_id"}, 404
-
         except Exception as e:
             return {"error": str(e)}, 500
