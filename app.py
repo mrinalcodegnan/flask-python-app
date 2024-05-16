@@ -176,7 +176,8 @@ class MyFlask(Flask):
                 'client' : self.client,
                 'db' : "codegnan_prod",
                 'job_collection': self.job_details_collection,
-                'student_collection': self.student_login_collection
+                'student_collection': self.student_login_collection,
+                'bde_collection':self.bde_login_collection
             }
         )
         

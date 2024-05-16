@@ -49,7 +49,7 @@ class ListOpenings(Resource):
                 "educationQualification": job_document.get('educationQualification'),
                 "department": job_document.get('department'),
                 "percentage": job_document.get('percentage'),
-                "technologies": job_document.get('technologies'),
+                "technologies": job_document.get('jobSkills'),
                 "bond": job_document.get('bond'),
                 "jobLocation": job_document.get('jobLocation'),
                 "specialNote": job_document.get('specialNote'),
