@@ -124,7 +124,7 @@ class JobPosting(Resource):
         educationQualification = data.get('educationQualification')
         department = data.get('department')
         percentage = data.get('percentage')
-        technologies = data.get('technologies')
+        technologies = data.get('jobSkills')
         bond = data.get('bond')
         jobLocation = data.get('jobLocation')
         specialNote = data.get("specialNote")
@@ -149,7 +149,7 @@ class JobPosting(Resource):
             "educationQualification": educationQualification,
             "department": department,
             "percentage": percentage,
-            "technologies": technologies,
+            "jobSkills": technologies,
             "bond": bond,
             "jobLocation": jobLocation,
             "specialNote": specialNote,
