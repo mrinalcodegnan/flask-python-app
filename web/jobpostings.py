@@ -124,12 +124,11 @@ class JobPosting(Resource):
         educationQualification = data.get('educationQualification')
         department = data.get('department')
         percentage = data.get('percentage')
-        technologies = data.get('jobSkills')
         bond = data.get('bond')
         jobLocation = data.get('jobLocation')
         specialNote = data.get("specialNote")
         deadLine = data.get("deadLine")
-        jobSkills = data.get("selectedSkills", [])
+        jobSkills = data.get("jobSkills", [])
         student_id = data.get('student_id')  # Extract student_id from request data
 
         # Insert job posting data into MongoDB
@@ -149,7 +148,6 @@ class JobPosting(Resource):
             "educationQualification": educationQualification,
             "department": department,
             "percentage": percentage,
-            "jobSkills": technologies,
             "bond": bond,
             "jobLocation": jobLocation,
             "specialNote": specialNote,
