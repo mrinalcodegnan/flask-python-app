@@ -106,7 +106,6 @@ class StudentSignup(Resource):
         # Extract data from the request
         data = request.form
         id = str(uuid.uuid4())
-        print(data,"before mongo")
 
         timestamp = datetime.now().isoformat()
         name = data.get('name')
@@ -125,6 +124,10 @@ class StudentSignup(Resource):
         tenthStandard = float(data.get("tenthStandard"))
         twelfthStandard = float(data.get("twelfthStandard"))
         resume_file = request.files.get('resume')
+        collegeUSNNumber = data.get("collegeUSNNumber")
+        githubLink=data.get("githubLink")
+        arrears=data.get("arrears")
+
         
         # Check if the database exists, if not, create it
         if self.db_name not in self.client.list_database_names():
@@ -160,7 +163,10 @@ class StudentSignup(Resource):
             "highestGraduationCGPA": highestGraduationCGPA,
             "studentSkills": studentSkills,
             "tenthStandard": tenthStandard,
-            "twelfthStandard":twelfthStandard
+            "twelfthStandard":twelfthStandard,
+            "collegeUSNNumber":collegeUSNNumber,
+            "githubLink":githubLink,
+            "arrears":arrears
         }
         result = self.collection.insert_one(student_data)
         student_data['_id'] = str(result.inserted_id)

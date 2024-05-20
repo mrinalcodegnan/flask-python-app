@@ -57,5 +57,5 @@ class ListOpenings(Resource):
                 "isActive": isActive
             }
             job_list.append(job_dict)
-
+        job_list.reverse()
         return {"jobs": job_list}, 200
