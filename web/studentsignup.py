@@ -122,8 +122,8 @@ class StudentSignup(Resource):
         collegeName = data.get("collegeName")
         highestGraduationCGPA = float(data.get("highestGraduationCGPA"))
         studentSkills = data.getlist("studentSkills[]")
-        tenthStandard = int(data.get("tenthStandard"))
-        twelfthStandard = int(data.get("twelfthStandard"))
+        tenthStandard = float(data.get("tenthStandard"))
+        twelfthStandard = float(data.get("twelfthStandard"))
         resume_file = request.files.get('resume')
         
         # Check if the database exists, if not, create it

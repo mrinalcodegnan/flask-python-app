@@ -112,8 +112,9 @@ class UpdateJobApplicants(Resource):
                 <p>Dear {{ name }},</p>
                 <p>Congratulations!</p>
                 <p>We are delighted to inform you that you have been selected for the next round for the position of <strong>{{ job_position }}</strong> at <strong>{{ company_name }}</strong>.</p>
-                <p>Best regards,</p>
-                <p>Codegnan Placements</p>
+                <p>Codegnan destination placements </p>
+                <p>www.codegnan.com</p>
+                <p>+91 6301341478</p>   
             """, name=name, job_position=job_position, company_name=company_name)
         else:
             message = render_template_string("""
@@ -121,8 +122,9 @@ class UpdateJobApplicants(Resource):
                 <p>We regret to inform you that your application for the position of <strong>{{ job_position }}</strong> at <strong>{{ company_name }}</strong> has been unsuccessful.</p>
                 <p>We appreciate your interest in our company and wish you all the best in your future endeavors.</p>
                 <p>Thank you for your time and consideration.</p>
-                <p>Best regards,</p>
-                <p>Codegnan Placements</p>
+                <p>Codegnan destination placements </p>
+                <p>www.codegnan.com</p>
+                <p>+91 6301341478</p>   
             """, name=name, job_position=job_position, company_name=company_name)
 
         # Email configuration
@@ -161,7 +163,9 @@ class UpdateJobApplicants(Resource):
             <p>Number of selected students: {{ selected_count }}</p>
             <p>Number of rejected students: {{ rejected_count }}</p>
             <p>Best regards,</p>
-            <p>Codegnan Placements</p>
+            <p>Codegnan destination placements </p>
+            <p>www.codegnan.com</p>
+            <p>+91 6301341478</p>                            
         """, company_name=company_name, job_position=job_position, selected_count=len(selected_students), rejected_count=len(rejected_students))
 
         # Email configuration
