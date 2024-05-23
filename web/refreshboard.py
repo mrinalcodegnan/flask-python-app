@@ -8,10 +8,11 @@ class GoogleSheetReader(Resource):
 
     def get(self):
         data = pd.read_csv('assets/homepage.csv')
-        branch_list = data['Branch'].to_list()
-        companies = data['Company Name'].to_list()
-        colleges_list  = data['College'].to_list()
-        yops = data['YOP'].to_list()
+        cleaned_data = data.dropna(subset=['Branch', 'Company Name', 'College', 'YOP'])
+        branch_list = cleaned_data['Branch'].tolist()
+        companies = cleaned_data['Company Name'].tolist()
+        colleges_list = cleaned_data['College'].tolist()
+        yops = cleaned_data['YOP'].tolist()
 
         branch_list_map = {}
         companies_map = {}
