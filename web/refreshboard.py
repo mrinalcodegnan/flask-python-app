@@ -23,28 +23,28 @@ class GoogleSheetReader(Resource):
             if branch in branch_list_map:
                 branch_list_map[branch] += 1
             else:
-                if branch is not "Nan":
+                if branch != "Nan":
                     branch_list_map[branch] = 1
 
         for company in companies:
             if company in companies_map:
                 companies_map[company] += 1
             else:
-                if company is not "Nan":
+                if company != "Nan":
                     companies_map[company] = 1
 
         for colleges in colleges_list:
             if colleges in colleges_list_map:
                 colleges_list_map[colleges] += 1
             else:
-                if colleges is not "Nan":
+                if colleges != "Nan":
                     colleges_list_map[colleges] = 1
 
         for yop in yops:
             if yop in yops_list:
                 yops_list[yop] += 1
             else:
-                if yop is not "Nan":
+                if yop != "Nan":
                     yops_list[yop] = 1
 
         yops_list = dict(sorted(yops_list.items(), key=lambda x: x[1], reverse=True))
